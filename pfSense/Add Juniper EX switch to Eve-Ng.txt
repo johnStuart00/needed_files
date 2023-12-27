@@ -1,0 +1,19 @@
+Downloaded image file: vJunos-switch-23.2R1.14.qcow2
+	https://support.juniper.net/support/downloads/?p=vjunos
+
+SSH CLI to your EVE as root and create the new image directory in: /opt/unetlab/addos/qemu/
+	mkdir /opt/unetlab/addons/qemu/vjunosswitch-23.2R1.14
+
+Upload the downloaded image to the EVE newly created directoriy using FileZilla or WinSCP or Bitvise.
+	vJunos-switch-23.2R1.14.qcow2  to  /opt/unetlab/addons/qemu/vjunosswitch-23.2R1.14
+
+Rename original filename to EVE format, commands from EVE CLI
+	cd /opt/unetlab/addons/qemu/vjunosswitch-23.2R1.14
+	mv vJunos-switch-23.2R1.14.qcow2 virtioa.qcow2
+
+	cd /opt/unetlab/addons/qemu/vjunosswitch-23.1R1.8
+	ls
+	virtioa.qcow2
+
+Fix permissions
+	/opt/unetlab/wrappers/unl_wrapper -a fixpermissions

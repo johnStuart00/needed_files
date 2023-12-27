@@ -1,0 +1,36 @@
+Create a new directory for this image according to the naming convention:+
+	mkdir /opt/unetlab/addons/qemu/win-10x64PRO
+
+Go to that directory via CLI
+	cd /opt/unetlab/addons/qemu/win-10x64PRO/
+
+Rename this ISO file to cdrom.iso
+	mv ru_windows_10_version_2004_updated_aug_2020_x64_dvd.iso cdrom.iso
+
+/opt/qemu/bin/qemu-img create -f qcow2 virtioa.qcow2 35G
+
+From the EVE CLI, locate the installed image and commit your changes to be used as default for further use in EVE-NG:
+	cd /opt/unetlab/tmp/0/3491e0a7-25f8-46e1-b697-ccb4fc4088a2/8/
+	/opt/qemu/bin/qemu-img commit virtioa.qcow2
+
+Remove cdrom.iso from /opt/unetlab/addons/qemu/win-10x64PRO/
+	cd /opt/unetlab/addons/qemu/win-10x64PRO/
+	rm -f cdrom.iso
+
+***Advanced instructions on how to make your image smaller in size (sparsify&compress).***
+
+From the CLI: go to your windows image directory:
+	cd /opt/unetlab/addons/qemu/win-10x64PRO
+
+and perform the sparsify command:
+	eve-sparsify  --compress virtioa.qcow2 compressedvirtioa.qcow2
+
+This will take some time and another compressed image will be created in the same image directory (win-10×64PRO)
+Now you can rename your original virtioa.qcow2 file to orig.qcow2
+	mv virtioa.qcow2 orig.qcow2
+
+Rename the compressed image name to virtioa.qcow2:
+	mv compressedvirtioa.qcow2 virtioa.qcow2
+
+Now you can test your new compressed image on a lab, just wipe the node and start it.
+If the compressed node works fine, you can delete your original source image orig.qcow2:

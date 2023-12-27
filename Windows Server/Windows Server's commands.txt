@@ -1,0 +1,84 @@
+Add Keyboard Language En/Ru/Tk
+	HKEY_CURRENT_USER\HKEY_CURRENT_USER\Keyboard Layout\Preload  												--> 1  											--> REG_SZ --> 00000409
+	HKEY_CURRENT_USER\HKEY_CURRENT_USER\Keyboard Layout\Preload  												--> 2  											--> REG_SZ --> 00000419
+	HKEY_CURRENT_USER\HKEY_CURRENT_USER\Keyboard Layout\Preload  												--> 3  											--> REG_SZ --> 00000442
+    
+https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/windows-language-pack-default-values?view=windows-11
+
+Disable - Show Task View Button On The Taskbar
+	HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced   							--> ShowTaskViewButton  						--> REG_DWORD --> 0
+
+Disable - Search Bar On The Taskbar
+	HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Search			  								--> SearchboxTaskbarMode						--> REG_DWORD --> 0
+
+Disable - News And Interests On The Taskbar
+	HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Feeds				  							--> ShellFeedsTaskbarViewMode					--> REG_DWORD --> 2
+
+Taskbar Icons Small
+	HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced	  							--> TaskbarSmallIcons							--> REG_DWORD --> 1
+
+Show Ribbon in File Explorer
+	HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Ribbon									--> MinimizedStateTabletModeOff				  --> REG_DWORD --> 0
+    HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Ribbon									--> MinimizedStateTabletModeOn				  --> REG_DWORD --> 0
+    
+    Computer Configuration > Administrative Templates > Windows Components > File Explorer > Start File Explorer with Ribbon minimized > Enabled > Alway open new File Explorer windows
+
+Desktop Icons Small    
+    HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\Shell\Bags\1\Desktop											--> IconSize									--> REG_DWORD --> 32
+https://www.elevenforum.com/t/change-size-of-desktop-icons-in-windows-11.4820/
+
+Auto Arrange Icons Desktop
+	HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\Shell\Bags\1\Desktop											--> FFlags										--> REG_DWORD --> 1075839520
+
+Create This PC, Recycle Bin, User's File To Desktop
+	HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel			--> {20D04FE0-3AEA-1069-A2D8-08002B30309D}		--> REG_DWORD --> 0
+	HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel			--> {645FF040-5081-101B-9F08-00AA002F954E}		--> REG_DWORD --> 0
+	HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel			--> {59031a47-3f72-44a7-89c5-5595fe6b30ee}		--> REG_DWORD --> 0
+    
+    HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\ClassicStartMenu		--> {20D04FE0-3AEA-1069-A2D8-08002B30309D}		--> REG_DWORD --> 0
+	HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\ClassicStartMenu		--> {645FF040-5081-101B-9F08-00AA002F954E}		--> REG_DWORD --> 0
+	HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\ClassicStartMenu		--> {59031a47-3f72-44a7-89c5-5595fe6b30ee}		--> REG_DWORD --> 0
+  
+https://www.tenforums.com/tutorials/6942-add-remove-default-desktop-icons-windows-10-a.html
+
+Short
+	HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\Shell\Bags\1\Desktop											--> Sort									   -->REG_BINARY --> 000000000000000000000000000000000100000030f125b7ef471a10a5f102608c9eebac0a00000001000000
+    
+Set File Explorer to Open This PC
+	HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced								--> LaunchTo								  --> REG_DWORD --> 1
+    
+Enable - Dark Mode
+	HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize								--> AppsUseLightTheme						  --> REG_DWORD --> 0
+    HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize								--> SystemUsesLightTheme					  --> REG_DWORD --> 0
+
+Change Color Windows
+	HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\DWM															--> AccentColor								  --> REG_DWORD --> 4282927692
+    HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\DWM															--> ColorizationAfterglow					  --> REG_DWORD --> 3293334088
+    HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\DWM															--> ColorizationColor						  --> REG_DWORD --> 3293334088
+
+Set Default Apps Properly in Windows
+	Computer Configuration –> Administrative Templates –> Windows Components –> File Explorer -> Set a default associations configuration file -> Enabled -> DIR
+
+Disable - All Rmovable Disks & DVD & CD & Floppy Drivers & WPD Devices
+	User Configuration -> Policies -> Administrative Templates -> System -> Removable Storage Access
+	Computer Configuration -> Policies -> Administrative Templates -> System -> Removable Storage Access
+    
+Disable - cmd / powershell / powershell_ise / resmon / regedit / mstsc / taskmgr
+	User Configuration -> Policies -> Administrative Templates -> System -> Ctrl+Alt+Del Options -> Remove Task Manager
+	User Configuration -> Policies -> Administrative Templates -> System -> Don't run specified Windows applications -> Enable -> Show 
+    User Configuration -> Policies -> Windows Settings -> Security Settings -> Software Restriction Policies
+
+Disable - Mobile Hotspot
+	Computer Configuration -> Policies -> Administrative Templates -> Network -> Network Connections -> Prohibit use of Internet Connection Sharing on your DNS -> Enable
+    
+Disable - Control Panel
+	User Configuration -> Policies -> Administrative Templates -> Control Panel -> Prohibit access to Control Panel and PC settings -> Enable
+    
+Disable - Forced System Restarts
+	Computer Configuration -> Policies -> Administrative Templates -> Windows Component -> Windows Update -> No auto-restart with logged on users for scheduled automatic updates installations -> Enabled
+
+Disable -Guest Account
+	Computer Configuration -> Policies -> Windows Settings -> Security Settings -> Local Policies -> Security Options -> Accounts: Guest Account Status -> Disabled
+
+Restrict Software Installations
+	Computer Configuration -> Policies -> Administrative Templates -> Windows Component -> Windows Installer -> Prohibit User Install -> Enabled

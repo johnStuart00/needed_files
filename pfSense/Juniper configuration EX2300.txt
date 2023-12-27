@@ -1,0 +1,87 @@
+- cli / configure
+- set system host-name juniper_in
+- set system login user admin class super-user authentication plain-text-password
+- your_admin_password
+- confirm your_admin_password
+
+
+
+-----------------------------------
+
+- configure
+- set vlans MGMT vlan-id 200
+- set vlans TEST vlan-id 10
+- show vlans
+- set interface ge-0/0/8 description ***uplink-router***
+- set interface ? ge-0/0/8 unit 0 family ethernet-switching port-mode trunk
+- set interface ge-0/0/9 unit 0 family ethernet-switching vlan members [10 200]
+- set interface ge-0/0/9 unit 0 family ethernet-switching port-mode access
+- set interface ge-0/0/9 unit 0 family ethernet-switching vlan members 10
+- commit
+
+------------------------------------
+
+- cli
+- configure
+- set system root-authentication plain-text-password
+- your_root_password
+- confirm your_root_password
+- commit
+- delete chassis auto-image-upgrade
+- commit
+- set system host-name juniper_gate2_in
+- set system domain-name example.com
+- delete interface vme unit 0 family inet dhcp (for disabling dhcp)
+- set interface vme description management unit 0 family inet address XX.XX.XX.XX/24
+- commit
+
+------------------------------------
+BRING THE DEVICE CONFIGURATION TO DEFAULT
+
+	- enter the system with login and password
+	- cli
+	- request system zeroize media
+	- enter yes
+
+
+
+----------------------------------------------------------
+
+RESETTING ROOT PASSWORD JUNIPER SWITCH EX2300-48T
+
+	- While configuring Putty
+		- Bits per second: 9600
+		- Data bits: 8
+		- Parity: None
+		- Stop bits: 1
+		- Flow control: None
+
+	- Shut down the system
+	- Connect with Putty
+	- Then start the device
+	- Press Ctrl + C (when it asks to stop the autoboot)
+	- Main Menu >>> 5. [M]ore options >>> 
+	- Choose Options Menu >>> 2. Recovery mode - [C]LI
+		- configure
+		- set system root-authentication plain-text-password
+		- your_root_password
+		- confirm your_root_password
+		- commit
+		- exit
+		- request system reboot
+
+
+
+
+------------------------------------------------------------
+
+ASSIGNING IP ADDRESS TO MANAGEMENT PORT OF JUNIPER SWITCH EX2300-48T
+
+	- cli
+	- configure
+	- delete interface vme unit 0 family inet dhcp (for disabling dhcp)
+	- set interface vme description management unit 0 family inet address XX.XX.XX.XX/24
+	- commit
+
+
+-----------------------------------------------------------------

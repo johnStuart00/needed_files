@@ -1,0 +1,49 @@
+Install Windows to EVE-NG
+	- Download Bitvise SSH Client - https://dl.bitvise.com/BvSshClient-Inst.exe
+	
+	or
+	
+	- Download and install SFTP Manager 
+		- FileZilla - https://filezilla.ru/get/
+	- Download Putty:
+		- Download with internet - https://www.putty.org/
+		- Finde with installed folder Eve-ng Client Side.
+			- Folder dir: C:\Program File\EVE-NG
+
+	Installation
+
+		- Power VM Machine EVE-NG
+		- Open Bitvise SSH Client
+		- Go through the authentication procedure:
+			- ip address [which one is specified in the EVE-NG virtual machine] 
+			- user: root
+			- password: eve
+
+		In the SFTP:
+
+			- Go to folder /opt/unetlab/addons/qemu and create folder "winserver-*"
+			- Add a Windows image to the created folder
+			- Rename image to cdrom.iso
+
+		In the Terminal:
+
+			- Go to the directory with the command:
+				- cd /opt/unetlab/addons/qemu/winserver-*
+			- Create a virtual hard disk:
+				- /opt/qemu/bin/qemu-img create -f qcow2 virtioa.qcow2 35G
+
+		In the EVE-NG web interface:
+
+			- Add Windows Server object, launch and begin Windows installation
+			- Install Correctly! Windows
+				- Sellect drive, FDD B/storage/2003R3/AMD64
+		
+		In the Terminal:
+
+			- Make the current VM state the default:
+				- Go to the directory - cd/opt/unetlab/tmp/0/[id labaratory]/[id object]
+				- Run command - /opt/qemu/bin/qemu-img commit virtioa.qcow2
+
+		In the SFTP
+
+			- Delete cdrom.iso

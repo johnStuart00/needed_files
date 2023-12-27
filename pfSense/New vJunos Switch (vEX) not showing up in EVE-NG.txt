@@ -1,0 +1,27 @@
+Install GIT apt on your EVE
+		apt update
+		apt install git
+
+Templates Update. SSH as root to your EVE and navigate to:
+		cd /opt/unetlab/html/templates/
+
+Run GIT update to obtain templates and fix permissions:
+		git stash
+		git pull
+		/opt/unetlab/wrappers/unl_wrapper -a fixpermissions
+
+Navigate to EVE icons folder
+		cd /opt/unetlab/html/images/icons 
+
+Run GIT update to obtain icons and fix permissions:
+		git stash
+		git pull
+		/opt/unetlab/wrappers/unl_wrapper -a fixpermissions
+
+Navigate to EVE config scripts folder
+		cd /opt/unetlab/config_scripts
+
+Run GIT update to obtain config scripts and fix permissions:
+		git stash
+		git pull
+		/opt/unetlab/wrappers/unl_wrapper -a fixpermissions

@@ -1,0 +1,200 @@
+Nginx---->
+	sudo apt-get update -y
+	sudo apt-get upgrade -y
+	sudo apt-get install nginx -y
+	sudo systemctl status nginx
+
+PHP 8.1---->
+	sudo apt install software-properties-common -y
+	sudo add-apt-repository ppa:ondrej/php -y
+	sudo apt install php8.1 php8.1-{fpm,common,mbstring,xmlrpc,soap,gd,xml,intl,mysql,cli,mcrypt,ldap,zip,curl} -y
+	php -v
+	sudo nano /etc/php/8.1/fpm/php.ini
+
+		upload_max_filesize = 512M
+		post_max_size = 512M
+		memory_limit = 256M
+		max_execution_time = 300
+		max_input_vars = 5000
+		max_input_time = 1000
+		date.timezone = Asia/Ashgabat
+
+	sudo php-fpm8.1 -t 
+	sudo service php8.1-fpm restart
+
+MariaDB---->
+	cd /tmp
+	sudo wget https://downloads.mariadb.com/MariaDB/mariadb_repo_setup
+	sudo chmod a+x mariadb_repo_setup
+	sudo ./mariadb_repo_setup --mariadb-server-version="mariadb-10.6"
+	sudo rm -rf mariadb_repo_setup
+	sudo apt install -y mariadb-server
+	mariadb --version
+	sudo service mariadb status
+	sudo service mariadb stop
+	sudo service mariadb start
+	sudo service mariadb restart
+	sudo mariadb -u root
+	ALTER USER root@localhost IDENTIFIED BY 'root_password';
+	exit
+	mariadb -u root -p
+	root_password
+	create database your_db_name;
+	create user your_user_name@localhost identified by 'user_password';
+	grant all privileges on your_db_name.* to your_user_name@localhost;
+	flush privileges;
+	exit;
+
+Download YourProject ---->
+	cd /tmp
+	sudo apt install unzip
+	sudo apt install unrar
+	unrar or unzip your project
+	sudo rm -R yourproject.zip or .rar
+	sudo mv yourproject/ /var/www/html/yourproject	
+	sudo chown -R www-data:www-data /var/www/html/yourproject
+	sudo chmod -R 755 /var/www/html/yourproject
+
+Create an Nginx server block for YourProject---->
+	sudo nano /etc/nginx/sites-available/yourproject.conf
+
+		server {
+		    listen 80;
+		    listen [::]:80;
+		    root /var/www/html/yourproject/;
+		    index  index.php index.html index.htm;
+		    server_name  yourproject.edu www.yourproject.edu;
+
+		    location / {
+		    try_files $uri $uri/ =404;        
+		    }
+
+		    location ~ [^/]\.php(/|$) {
+		        include snippets/fastcgi-php.conf;
+		        fastcgi_pass unix:/var/run/php/php8.1-fpm.sock;
+		        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+		        include fastcgi_params;
+		    }
+		}
+
+	sudo ln -s /etc/nginx/sites-available/yourproject.conf /etc/nginx/sites-enabled/
+	sudo unlink /etc/nginx/sites-enabled/default
+	sudo nginx -t
+	sudo systemctl restart nginx
+	http://your_server_ip
+
+Create a Self-Signed SSL Certificate---->
+	sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/nginx-selfsigned.key -out /etc/ssl/certs/nginx-selfsigned.crt
+
+		Country Name (2 letter code) [AU]:TM
+		State or Province Name (full name) [Some-State]:Ashgabat
+		Locality Name (eg, city) []:Ashgabat
+		Organization Name (eg, company) [Internet Widgits Pty Ltd]:YyndamCode
+		Organizational Unit Name (eg, section) []:YyndamCode
+		Common Name (e.g. server FQDN or YOUR name) []:YourProject
+		Email Address []:yyndamcode@gmail.com
+
+	sudo openssl dhparam -out /etc/nginx/dhparam.pem 4096
+	sudo nano /etc/nginx/snippets/self-signed.conf
+		
+		ssl_certificate /etc/ssl/certs/nginx-selfsigned.crt;
+		ssl_certificate_key /etc/ssl/private/nginx-selfsigned.key;
+
+	sudo nano /etc/nginx/snippets/ssl-params.conf
+
+		ssl_protocols TLSv1.3;
+		ssl_prefer_server_ciphers on;
+		ssl_dhparam /etc/nginx/dhparam.pem; 
+		ssl_ciphers EECDH+AESGCM:EDH+AESGCM;
+		ssl_ecdh_curve secp384r1;
+		ssl_session_timeout  10m;
+		ssl_session_cache shared:SSL:10m;
+		ssl_session_tickets off;
+		ssl_stapling on;
+		ssl_stapling_verify on;
+		resolver 8.8.8.8 8.8.4.4 valid=300s;
+		resolver_timeout 5s;
+		# Disable strict transport security for now. You can uncomment the following
+		# line if you understand the implications.
+		#add_header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload";
+		#add_header X-Frame-Options DENY;
+		add_header X-Content-Type-Options nosniff;
+		add_header X-XSS-Protection "1; mode=block";
+
+	sudo nano /etc/nginx/sites-available/yourproject.conf
+
+		# Redirect HTTP to HTTPS
+		server {
+		    listen 80; listen [::]:80;
+		    server_name yourproject.edu www.yourproject.edu;
+		    return 301 https://$host$request_uri;
+		}
+
+		server {
+		    listen 443 ssl http2;
+		    listen [::]:443 ssl http2;
+
+		    server_name yourproject.edu www.yourproject.edu;
+		    root /var/www/html/yourproject/;
+		    index  index.php;
+
+		    include snippets/self-signed.conf;
+			include snippets/ssl-params.conf;
+
+		    location ~ ^(.+\.php)(.*)$ {
+		        fastcgi_split_path_info ^(.+\.php)(.*)$;
+		        fastcgi_index index.php;
+		        fastcgi_pass unix:/run/php/php8.1-fpm.sock;
+		        include /etc/nginx/mime.types;
+		        include fastcgi_params;
+		        fastcgi_param  PATH_INFO  $fastcgi_path_info;
+		        fastcgi_param  SCRIPT_FILENAME $document_root$fastcgi_script_name;
+		    }
+
+		    # Hide all dot files but allow "Well-Known URIs" as per RFC 5785
+		    location ~ /\.(?!well-known).* {
+		        return 404;
+		    }
+
+		    # This should be after the php fpm rule and very close to the last nginx ruleset.
+		    # Don't allow direct access to various internal files. See MDL-69333
+		    #location ~ (/vendor/|/node_modules/|composer\.json|/readme|/README|readme\.txt|/upgrade\.txt|db/install\.xml|/fixtures/|/behat/|phpunit\.xml|\.lock|environment\.xml) {
+		        #deny all;
+		        #return 404;
+		    #}
+		}
+
+	sudo nano /etc/nginx/nginx.conf 
+	(In http)
+
+	proxy_connect_timeout 180s;
+        proxy_send_timeout 180s;
+        proxy_read_timeout 180s;
+        fastcgi_send_timeout 180s;
+        fastcgi_read_timeout 180s;
+	client_max_body_size 2048M;
+
+	sudo nginx -t
+	sudo systemctl restart nginx
+	https://your_server_ip
+
+Fix the Resource temporarily unavailable error in nginx ---->
+	sudo nano /etc/sysctl.conf
+
+		net.core.somaxconn = 20000
+		net.core.netdev_max_backlog = 65535
+
+	sudo sysctl -p
+	sudo service php8.1-fpm restart
+
+
+
+
+
+
+// import and export mariadb
+
+mysql -u root -p <db_name> < /tmp/yourfile.sql
+
+mysqldump -u root -p <db_name> > /tmp/yourfile.sql
+ 
